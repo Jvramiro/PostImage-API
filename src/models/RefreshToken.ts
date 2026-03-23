@@ -13,7 +13,7 @@ export class RefreshToken extends Model {
     token!: string;
 
     @Column({ type: DataType.DATE, allowNull: false })
-    expiresAT!: Date;
+    expiresAt!: Date;
 
     @BelongsTo(() => User)
     user!: User;
