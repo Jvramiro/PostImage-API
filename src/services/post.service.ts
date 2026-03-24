@@ -13,17 +13,21 @@ export class PostService{
         });
     }
 
-    async findAll(): Promise<Post[]> {
-        return Post.findAll({
+    async findAll(page: number, limit: number): Promise<{ rows: Post[], count: number }> {
+        const offset = (page - 1) * limit;
+
+        return Post.findAndCountAll({
             include: [
                 { model: User, attributes: ['id', 'username'] },
-                { model: Like, attributes: ['id', 'userId' ] },
-                { model: Comment, attributes: ['id'] }
+                { model: Like, attributes: ['id', 'userId'] },
+                { model: Comment, attributes: ['id'] },
             ],
             order: [
                 ['createdAt', 'DESC']
-            ]
-        });
+            ],
+            limit,
+            offset
+        })
     }
 
     async findById(id: number): Promise<Post> {

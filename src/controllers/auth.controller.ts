@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { AuthService } from "../services/auth.service";
 import { RefreshTokenInput, RegisterInput } from '../schemas/auth.schema';
+import { sendSuccess } from '../utils/response.utils';
 
 const authService = new AuthService();
 
@@ -10,6 +11,7 @@ export class AuthController {
         try {
             const tokens = await authService.register(req.body as RegisterInput);
             res.status(201).json(tokens);
+            sendSuccess(res, tokens, 201);
         }
         catch(error) {
             next(error);
@@ -19,7 +21,7 @@ export class AuthController {
     async login(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const tokens = await authService.login(req.body as RegisterInput);
-            res.status(200).json(tokens);
+            sendSuccess(res, tokens);
         }
         catch(error) {
             next(error);
@@ -30,7 +32,8 @@ export class AuthController {
         try{
             const { refreshToken } = req.body as RefreshTokenInput;
             const tokens = await authService.refresh(refreshToken);
-            res.status(200).json(tokens);
+            sendSuccess(res, tokens);
+
         }
         catch(error) {
             next(error);
