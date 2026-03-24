@@ -14,7 +14,7 @@ export class Post extends Model {
     title!: string;
 
     @Column({ type: DataType.TEXT, allowNull: true })
-    descriptions!: string;
+    description!: string;
 
     @Column({ type: DataType.STRING, allowNull: false })
     imageUrl!: string;

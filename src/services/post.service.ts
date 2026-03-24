@@ -21,7 +21,7 @@ export class PostService{
                 { model: Comment, attributes: ['id'] }
             ],
             order: [
-                ['createAt', 'DESC']
+                ['createdAt', 'DESC']
             ]
         });
     }
