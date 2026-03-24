@@ -1,9 +1,10 @@
-import express from 'express';
+import 'reflect-metadata';
 import * as dotenv from 'dotenv';
+dotenv.config();
+
+import express from 'express';
 import router from './routes/routes';
 import { errorHandler } from './middlewares/error.middleware';
-
-dotenv.config();
 
 const app = express();
 

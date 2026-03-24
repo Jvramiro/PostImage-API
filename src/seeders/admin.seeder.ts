@@ -1,13 +1,17 @@
+import 'reflect-metadata';
 import * as dotenv from 'dotenv';
+dotenv.config();
+
 import { connectDatabase } from '../config/database';
 import { User } from '../models/User';
 import { UserRole } from '../enums/UserRole';
+import { env } from '../config/env.config';
 
 dotenv.config();
 
-const ADMIN_USERNAME = process.env.DB_ADMIN_USERNAME as string;
-const ADMIN_EMAIL = process.env.DB_ADMIN_USERNAME as string;
-const ADMIN_PASSWORD = process.env.DB_ADMIN_USERNAME as string;
+const ADMIN_USERNAME = env.DB_ADMIN_USERNAME as string;
+const ADMIN_EMAIL = env.DB_ADMIN_USERNAME as string;
+const ADMIN_PASSWORD = env.DB_ADMIN_USERNAME as string;
 
 const seed = async (): Promise<void> => {
     await connectDatabase();
