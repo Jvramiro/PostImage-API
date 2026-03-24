@@ -1,7 +1,7 @@
 import { UserRole } from "../enums/UserRole";
 import { RefreshToken } from "../models/RefreshToken";
 import { User } from "../models/User";
-import { RegisterInput } from "../schemas/auth.schema";
+import { LoginInput, RegisterInput } from "../schemas/auth.schema";
 import { generateAcessToken, generateRefreshToken, verifyRefreshToken } from "../utils/jwt.utils";
 
 export class AuthService {
@@ -21,6 +21,18 @@ export class AuthService {
             password: data.password,
             role: UserRole.USER
         })
+
+        return this.generateTokenPair(user);
+    }
+
+    async login(data: LoginInput): Promise<{ accessToken: string; refreshToken: string }> {
+        const user = await User.findOne({
+            where: { email: data.email}
+        });
+
+        if(!user || !(await user.comparePassword(data.password))){
+            throw new Error('Invalid Credentials');
+        }
 
         return this.generateTokenPair(user);
     }
