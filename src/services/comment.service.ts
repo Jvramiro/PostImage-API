@@ -3,17 +3,19 @@ import { Post } from "../models/Post";
 import { User } from "../models/User";
 import { CreateCommentInput, UpdateCommentInput } from "../schemas/comment.schema";
 
+import { NotFoundError, ForbiddenError } from "../errors/AppError";
+
 export class CommentService {
 
     async create(userId: number, postId: number, data: CreateCommentInput): Promise<Comment> {
         const user = await User.findByPk(userId);
         if (!user) {
-            throw new Error('User not found');
+            throw new NotFoundError('User not found');
         }
 
         const post = await Post.findByPk(postId);
         if (!post) {
-            throw new Error('Post not found');
+            throw new NotFoundError('Post not found');
         }
 
         return Comment.create({
@@ -39,11 +41,11 @@ export class CommentService {
         const comment = await Comment.findByPk(id);
 
         if(!comment){
-            throw new Error('Comment not found');
+            throw new NotFoundError('Comment not found');
         }
 
         if(comment.userId !== userId && userRole !== 'admin') {
-            throw new Error('Forbidden');
+            throw new ForbiddenError('Forbidden');
         }
 
         return comment.update({
@@ -55,11 +57,11 @@ export class CommentService {
         const comment = await Comment.findByPk(id);
 
         if(!comment){
-            throw new Error('Comment not found');
+            throw new NotFoundError('Comment not found');
         }
 
         if(comment.userId !== userId && userRole !== 'admin') {
-            throw new Error('Forbidden');
+            throw new ForbiddenError('Forbidden');
         }
 
         await comment.destroy();

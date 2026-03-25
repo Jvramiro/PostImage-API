@@ -4,6 +4,8 @@ import { User } from "../models/User";
 import { LoginInput, RegisterInput } from "../schemas/auth.schema";
 import { generateAcessToken, generateRefreshToken, verifyRefreshToken } from "../utils/jwt.utils";
 
+import { ConflictError, UnauthorizedError, NotFoundError } from "../errors/AppError";
+
 export class AuthService {
 
     async register(data: RegisterInput): Promise<{ accessToken: string; refreshToken: string }> {
@@ -12,7 +14,7 @@ export class AuthService {
         });
 
         if(existingUser) {
-            throw new Error('Email already in user');
+            throw new ConflictError('Email already in use');
         }
 
         const user = await User.create({
@@ -31,7 +33,7 @@ export class AuthService {
         });
 
         if(!user || !(await user.comparePassword(data.password))){
-            throw new Error('Invalid Credentials');
+            throw new UnauthorizedError('Invalid credentials');
         }
 
         return this.generateTokenPair(user);
@@ -44,12 +46,12 @@ export class AuthService {
             where: { token }
         });
         if(!storedToken || storedToken.expiresAt < new Date()) {
-            throw new Error('Refresh token invalid or expired')
+            throw new UnauthorizedError('Refresh token invalid or expired')
         }
 
         const user = await User.findByPk(payload.id);
         if(!user){
-            throw new Error('User not found');
+            throw new NotFoundError('User not found');
         }
 
         await storedToken.destroy();

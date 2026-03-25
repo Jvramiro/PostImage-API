@@ -2,18 +2,20 @@ import { Like } from "../models/Like";
 import { Post } from "../models/Post";
 import { User } from "../models/User";
 
+import { NotFoundError } from "../errors/AppError";
+
 export class LikeService{
 
     async toggle(userId: number, postId: number): Promise<{ liked: boolean }> {
 
         const user = await User.findByPk(userId);
         if (!user) {
-            throw new Error('User not found');
+            throw new NotFoundError('User not found');
         }
 
         const post = await Post.findByPk(postId);
         if (!post) {
-            throw new Error('Post not found');
+            throw new NotFoundError('Post not found');
         }
 
         const existing = await Like.findOne({

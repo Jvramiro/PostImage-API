@@ -4,12 +4,14 @@ import { Post } from "../models/Post";
 import { User } from "../models/User";
 import { CreatePostInput } from "../schemas/post.schema";
 
+import { NotFoundError, ForbiddenError } from "../errors/AppError";
+
 export class PostService{
     
     async create(userId: number, data: CreatePostInput): Promise<Post> {
         const user = await User.findByPk(userId);
         if (!user) {
-            throw new Error('User not found');
+            throw new NotFoundError('User not found');
         }
         
         return Post.create({
@@ -47,7 +49,7 @@ export class PostService{
         });
 
         if(!post){
-            throw new Error('Post not found');
+            throw new NotFoundError('Post not found');
         }
 
         return post;
@@ -57,11 +59,11 @@ export class PostService{
         const post = await Post.findByPk(id);
 
         if(!post) {
-            throw new Error('Post not found');
+            throw new NotFoundError('Post not found');
         }
 
         if(post.userId !== userId && userRole !== 'admin'){
-            throw new Error('Forbidden');
+            throw new ForbiddenError('Forbidden');
         }
 
         await post.destroy();
