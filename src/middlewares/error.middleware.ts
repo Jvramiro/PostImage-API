@@ -5,6 +5,11 @@ interface AppError extends Error {
 }
 
 export const errorHandler = (error: AppError, req: Request, res: Response, next: NextFunction): void => {
+
+    if(res.headersSent){
+        return;
+    }
+
     console.error(error);
 
     const message = error.message || 'Internal server error';
