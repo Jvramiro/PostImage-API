@@ -7,6 +7,11 @@ import { CreatePostInput } from "../schemas/post.schema";
 export class PostService{
     
     async create(userId: number, data: CreatePostInput): Promise<Post> {
+        const user = await User.findByPk(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+        
         return Post.create({
             userId,
             ...data

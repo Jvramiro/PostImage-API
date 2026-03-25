@@ -1,10 +1,21 @@
 import { Comment } from "../models/Comment";
+import { Post } from "../models/Post";
 import { User } from "../models/User";
 import { CreateCommentInput, UpdateCommentInput } from "../schemas/comment.schema";
 
 export class CommentService {
 
     async create(userId: number, postId: number, data: CreateCommentInput): Promise<Comment> {
+        const user = await User.findByPk(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        const post = await Post.findByPk(postId);
+        if (!post) {
+            throw new Error('Post not found');
+        }
+
         return Comment.create({
             userId: userId,
             postId: postId,
