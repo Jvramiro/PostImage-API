@@ -1,0 +1,34 @@
+services:
+  postimage-db:
+    image: postgres:16
+    container_name: postimage-db
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postimage_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  postimage-api:
+    build: .
+    container_name: postimage-api
+    env_file:
+      - .env
+      - .env.docker
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "${PORT}:3000"
+    depends_on:
+      postimage-db:
+        condition: service_healthy
+
+volumes:
+  postimage_data:

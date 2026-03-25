@@ -1,6 +1,8 @@
 import 'reflect-metadata';
-import * as dotenv from 'dotenv';
-dotenv.config();
+
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 
 import app from './app';
 import { connectDatabase } from './config/database';
