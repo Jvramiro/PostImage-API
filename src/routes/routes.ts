@@ -8,6 +8,7 @@ import { authenticate } from "../middlewares/auth.middleware";
 import { validate } from "../middlewares/validate.middleware";
 import { createPostSchema } from "../schemas/post.schema";
 import { createCommentSchema, updateCommentSchema } from "../schemas/comment.schema";
+import { authLimiter } from "../app";
 
 const router = Router();
 const authController = new AuthController();
@@ -16,10 +17,10 @@ const commentController = new CommentController();
 const likeController = new LikeController();
 
 // Auth
-router.post('/auth/register', validate(registerSchema), (req, res, next) => authController.register(req, res, next));
-router.post('/auth/login', validate(loginSchema), (req, res, next) => authController.login(req, res, next));
-router.post('/auth/refresh', validate(refreshTokenSchema), (req, res, next) => authController.refresh(req, res, next));
-router.post('/auth/logout', authenticate, validate(refreshTokenSchema), (req, res, next) => authController.logout(req, res, next));
+router.post('/auth/register', authLimiter, validate(registerSchema), (req, res, next) => authController.register(req, res, next));
+router.post('/auth/login', authLimiter, validate(loginSchema), (req, res, next) => authController.login(req, res, next));
+router.post('/auth/refresh', authLimiter, validate(refreshTokenSchema), (req, res, next) => authController.refresh(req, res, next));
+router.post('/auth/logout', authLimiter, authenticate, validate(refreshTokenSchema), (req, res, next) => authController.logout(req, res, next))
 
 // Posts
 router.get('/posts', (req, res, next) => postController.findAll(req, res, next));

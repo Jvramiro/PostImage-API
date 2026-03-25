@@ -1,13 +1,21 @@
+import 'reflect-metadata';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import app from './app';
 import { connectDatabase } from './config/database';
-
-const PORT = process.env.PORT || 3000;
+import { seedAdmin } from './seeders/admin.seeder';
+import { env } from './config/env.config';
 
 const start = async (): Promise<void> => {
     await connectDatabase();
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
+    await seedAdmin();
+    app.listen(env.PORT, () => {
+        console.log(`Server running on port ${env.PORT}`);
     });
 }
 
-start();
+start().catch((error) => {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+});
