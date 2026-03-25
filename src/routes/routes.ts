@@ -8,7 +8,7 @@ import { authenticate } from "../middlewares/auth.middleware";
 import { validate } from "../middlewares/validate.middleware";
 import { createPostSchema } from "../schemas/post.schema";
 import { createCommentSchema, updateCommentSchema } from "../schemas/comment.schema";
-import { authLimiter } from "../app";
+import { authLimiter } from '../middlewares/rate-limit.middleware';
 
 const router = Router();
 const authController = new AuthController();
