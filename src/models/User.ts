@@ -41,4 +41,10 @@ export class User extends Model{
         return bcrypt.compare(password, this.password);
     }
 
+    toJSON() {
+        const values = { ...this.get() } as any;
+        delete values.password;
+        return values;
+    }
+
 }
