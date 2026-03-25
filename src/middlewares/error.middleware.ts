@@ -1,41 +1,23 @@
 import { Request, Response, NextFunction } from 'express';
+import { AppError } from '../errors/AppError';
 
-interface AppError extends Error {
-    statusCode?: number;
-}
+export const errorHandler = (error: Error | AppError, req: Request, res: Response, next: NextFunction): void => {
 
-export const errorHandler = (error: AppError, req: Request, res: Response, next: NextFunction): void => {
-
-    if(res.headersSent){
+    if (res.headersSent) {
         return;
     }
 
     console.error(error);
 
     const message = error.message || 'Internal server error';
+    let statusCode = 500;
 
-    const statusCode = error.statusCode ?? (() => {
-        switch (message) {
-            case 'Invalid credentials':
-            case 'Refresh token invalid or expired':
-            case 'Invalid or expired access token':
-                return 401;
-            case 'Forbidden':
-                return 403;
-            case 'Post not found':
-            case 'Comment not found':
-            case 'User not found':
-                return 404;
-            case 'Email already in use':
-                return 409;
-            default:
-                return 500;
-        }
-    })();
+    if (error instanceof AppError) {
+        statusCode = error.statusCode;
+    }
 
     res.status(statusCode).json({
+        success: false,
         message: message
     });
 }
-
-
