@@ -101,37 +101,37 @@ The API will be available at `http://localhost:3000/api`.
 
 ### Auth
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| POST | `/api/auth/register` | No | Register a new user |
-| POST | `/api/auth/login` | No | Login and receive tokens |
-| POST | `/api/auth/refresh` | No | Refresh access token |
-| POST | `/api/auth/logout` | Yes | Logout and invalidate refresh token |
+| Method | Endpoint | Auth | Body | Description |
+|---|---|---|---|---|
+| POST | `/api/auth/register` | No | `{ "username": "John Doe", "email": "j@doe.com", "password": "123" }` | Register a new user |
+| POST | `/api/auth/login` | No | `{ "email": "j@doe.com", "password": "123" }` | Login and receive tokens |
+| POST | `/api/auth/refresh` | No | `{ "token": "your_refresh_token" }` | Refresh access token |
+| POST | `/api/auth/logout` | Yes | `{ "token": "your_refresh_token" }` | Logout and invalidate refresh token |
 
 ### Posts
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| GET | `/api/posts` | No | List all posts (paginated) |
-| GET | `/api/posts/:id` | No | Get a post by ID |
-| POST | `/api/posts` | Yes | Create a post |
-| DELETE | `/api/posts/:id` | Yes | Delete a post |
+| Method | Endpoint | Auth | Body | Description |
+|---|---|---|---|---|
+| GET | `/api/posts` | No | - | List all posts (paginated) |
+| GET | `/api/posts/:id` | No | - | Get a post by ID |
+| POST | `/api/posts` | Yes | `{ "title": "My Post", "description": "Nice post", "imageUrl": "http://image.com" }` | Create a post |
+| DELETE | `/api/posts/:id` | Yes | - | Delete a post |
 
 ### Comments
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| GET | `/api/posts/:postId/comments` | No | List comments of a post |
-| POST | `/api/posts/:postId/comments` | Yes | Add a comment to a post |
-| PUT | `/api/comments/:id` | Yes | Update a comment |
-| DELETE | `/api/comments/:id` | Yes | Delete a comment |
+| Method | Endpoint | Auth | Body | Description |
+|---|---|---|---|---|
+| GET | `/api/posts/:postId/comments` | No | - | List comments of a post |
+| POST | `/api/posts/:postId/comments` | Yes | `{ "content": "Great post!" }` | Add a comment to a post |
+| PUT | `/api/comments/:id` | Yes | `{ "content": "Updated comment!" }` | Update a comment |
+| DELETE | `/api/comments/:id` | Yes | - | Delete a comment |
 
 ### Likes
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| POST | `/api/posts/:postId/likes` | Yes | Toggle like on a post |
-| GET | `/api/posts/:postId/likes` | No | Get like count of a post |
+| Method | Endpoint | Auth | Body | Description |
+|---|---|---|---|---|
+| POST | `/api/posts/:postId/likes` | Yes | - | Toggle like on a post |
+| GET | `/api/posts/:postId/likes` | No | - | Get like count of a post |
 
 ## Authentication
 
